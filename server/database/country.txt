@@ -1,0 +1,50 @@
+1|Afghanistan|647500|Area|http://localhost:8080/images/country/Afghanistan.jpg
+2|Albania|28748|Area|http://localhost:8080/images/country/Albania.jpg
+3|Algeria|2381740|Area|http://localhost:8080/images/country/Algeria.jpg
+4|American Samoa|199|Area|http://localhost:8080/images/country/American_Samoa.jpg
+5|Andorra|468|Area|http://localhost:8080/images/country/Andorra.jpg
+6|Angola|1246700|Area|http://localhost:8080/images/country/Angola.jpg
+7|Anguilla|102|Area|http://localhost:8080/images/country/Anguilla.jpg
+8|Antigua & Barbuda|443|Area|http://localhost:8080/images/country/Antigua_&_Barbuda.jpg
+9|Argentina|2766890|Area|http://localhost:8080/images/country/Argentina.jpg
+10|Armenia|29800|Area|http://localhost:8080/images/country/Armenia.jpg
+11|Aruba|193|Area|http://localhost:8080/images/country/Aruba.jpg
+12|Australia|7686850|Area|http://localhost:8080/images/country/Australia.jpg
+13|Austria|83870|Area|http://localhost:8080/images/country/Austria.jpg
+14|Azerbaijan|86600|Area|http://localhost:8080/images/country/Azerbaijan.jpg
+15|Bahamas|13940|Area|http://localhost:8080/images/country/Bahamas.jpg
+16|Bahrain|665|Area|http://localhost:8080/images/country/Bahrain.jpg
+17|Bangladesh|144000|Area|http://localhost:8080/images/country/Bangladesh.jpg
+18|Barbados|431|Area|http://localhost:8080/images/country/Barbados.jpg
+19|Belarus|207600|Area|http://localhost:8080/images/country/Belarus.jpg
+20|Belgium|30528|Area|http://localhost:8080/images/country/Belgium.jpg
+21|Belize|22966|Area|http://localhost:8080/images/country/Belize.jpg
+22|Benin|112620|Area|http://localhost:8080/images/country/Benin.jpg
+23|Bermuda|53|Area|http://localhost:8080/images/country/Bermuda.jpg
+24|Bhutan|47000|Area|http://localhost:8080/images/country/Bhutan.jpg
+25|Bolivia|1098580|Area|http://localhost:8080/images/country/Bolivia.jpg
+26|Bosnia&Herzegovina|51129|Area|http://localhost:8080/images/country/Bosnia&Herzegovina.jpg
+27|Botswana|600370|Area|http://localhost:8080/images/country/Botswana.jpg
+28|Brazil|8511965|Area|http://localhost:8080/images/country/Brazil.jpg
+29|BritishVirginIs|153|Area|http://localhost:8080/images/country/BritishVirginIs.jpg
+30|Brunei|5770|Area|http://localhost:8080/images/country/Brunei.jpg
+31|Bulgaria|110910|Area|http://localhost:8080/images/country/Bulgaria.jpg
+32|BurkinaFaso|274200|Area|http://localhost:8080/images/country/BurkinaFaso.jpg
+33|Burma|678500|Area|http://localhost:8080/images/country/Burma.jpg
+34|Burundi|27830|Area|http://localhost:8080/images/country/Burundi.jpg
+35|Cambodia|181040|Area|http://localhost:8080/images/country/Cambodia.jpg
+36|Cameroon|475440|Area|http://localhost:8080/images/country/Cameroon.jpg
+37|Canada|9984670|Area|http://localhost:8080/images/country/Canada.jpg
+38|CapeVerde|4033|Area|http://localhost:8080/images/country/CapeVerde.jpg
+39|Caymanslands|262|Area|http://localhost:8080/images/country/Caymanslands.jpg
+40|CentralAfricanRep.|622984|Area|http://localhost:8080/images/country/CentralAfricanRep..jpg
+41|Chad|1284000|Area|http://localhost:8080/images/country/Chad.jpg
+42|Chile|756950|Area|http://localhost:8080/images/country/Chile.jpg
+43|China|9596960|Area|http://localhost:8080/images/country/China.jpg
+44|Comoros|1138910|Area|http://localhost:8080/images/country/Comoros.jpg
+45|Congo Dem. Rep.|2170|Area|http://localhost:8080/images/country/Congo_Dem._Rep..jpg
+46|Congo Repub|2345410|Area|http://localhost:8080/images/country/Congo_Repub.jpg
+47|Cook Islands|342000|Area|http://localhost:8080/images/country/Cook_Islands.jpg
+48|Costa Rica|240|Area|http://localhost:8080/images/country/Costa_Rica.jpg
+49|Cote d'Ivoire|51100|Area|http://localhost:8080/images/country/Cote_d'Ivoire.jpg
+50|Croatia|322460|Area|http://localhost:8080/images/country/Croatia.jpg

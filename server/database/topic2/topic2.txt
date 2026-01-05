@@ -1,0 +1,20 @@
+1,Apple,30000,VND/kg,pic1.jpg
+2,Banana,5000,VND/kg,pic2.jpg
+3,Carrot,47000,VND/kg,pic3.jpg
+4,Tomato,11500,VND/kg,pic4.jpg
+5,Potato,11000,VND/kg,pic5.jpg
+6,Broccoli,13000,VND/kg,pic6.jpg
+7,Spinach,15000,VND/kg,pic7.jpg
+8,Onion,17000,VND/kg,pic8.jpg
+9,Garlic,19000,VND/kg,pic9.jpg
+10,Cucumber,21000,VND/kg,pic10.jpg
+11,Bell Pepper,23000,VND/kg,pic11.jpg
+12,Lettuce,125000,VND/kg,pic12.jpg
+13,Strawberry,217000,VND/kg,pic13.jpg
+14,Blueberry,29000,VND/kg,pic14.jpg
+15,Orange,31000,VND/kg,pic15.jpg
+16,Grapes,33000,VND/kg,pic16.jpg
+17,Pineapple,35000,VND/kg,pic17.jpg
+18,Mango,37000,VND/kg,pic18.jpg
+19,Watermelon,39000,VND/kg,pic19.jpg
+20,Peach,41000,VND/kg,pic20.jpg

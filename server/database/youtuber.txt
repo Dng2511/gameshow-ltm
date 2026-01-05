@@ -1,0 +1,50 @@
+1|T-Series|135000000|Subscriptions|http://localhost:8080/images/youtuber/T-Series.jpg
+2|Cocomelon|78200000|Subscriptions|http://localhost:8080/images/youtuber/Cocomelon.jpg
+3|MrBeast|340000000|Subscriptions|https://startupgeek.com/wp-content/uploads/2023/09/MrBeast.jpg
+4|YouTube Movies|186000000|Subscriptions|http://localhost:8080/images/youtuber/yt_movies.jpg
+5|SET India|69300000|Subscriptions|http://localhost:8080/images/youtuber/SET_india.jpg
+6|RRcherrypie|3370000|Subscriptions|http://localhost:8080/images/youtuber/rrcherrypie.jpg
+7|Movieclips|36300000|Subscriptions|http://localhost:8080/images/youtuber/movieclips.jpg
+8|Zee TV|43000000|Subscriptions|http://localhost:8080/images/youtuber/zeetv.jpg
+9|Juguetes con Andre|5170000|Subscriptions|http://localhost:8080/images/youtuber/juguetes.jpg
+10|Vlad and Nikita|37700000|Subscriptions|http://localhost:8080/images/youtuber/vlad.jpg
+11|SAB TV|29400000|Subscriptions|http://localhost:8080/images/youtuber/sabtv.jpg
+12|PewDiePie|110000000|Subscriptions|http://localhost:8080/images/youtuber/pdp.jpg
+13|Peppa Pig - Official Channel|15100000|Subscriptions|http://localhost:8080/images/youtuber/peppa.jpg
+14|Zee Telugu|6750000|Subscriptions|http://localhost:8080/images/youtuber/zee.jpg
+15|BLACKPINK|9550000|Subscriptions|http://localhost:8080/images/youtuber/BLACKPINK.jpg
+16|Bad Bunny|24100000|Subscriptions|http://localhost:8080/images/youtuber/badbn.jpg
+17|5-Minute Crafts|1360000|Subscriptions|http://localhost:8080/images/youtuber/5min.jpg
+18|El Reino Infantil|32100000|Subscriptions|http://localhost:8080/images/youtuber/el.jpg
+19|WWE|57400000|Subscriptions|http://localhost:8080/images/youtuber/WWE.jpg
+20|Justin Bieber|74600000|Subscriptions|http://localhost:8080/images/youtuber/jb.jpg
+21|Little Baby Bum|27200000|Subscriptions|http://localhost:8080/images/youtuber/Baby-Bum.jpg
+22|UR · Cristiano|72600000|Subscriptions|http://localhost:8080/images/youtuber/siu.jpg
+23|Dude Perfect|60600000|Subscriptions|http://localhost:8080/images/youtuber/dp.jpg
+24|Mark Rober|61900000|Subscriptions|http://localhost:8080/images/youtuber/mr.jpg
+25|Taylor Swift|60500000|Subscriptions|http://localhost:8080/images/youtuber/ts.jpg
+26|Zee Music Company|53100000|Subscriptions|http://localhost:8080/images/youtuber/zeetv.jpg
+27|ABS-CBN Entertainment|26300000|Subscriptions|http://localhost:8080/images/youtuber/abs.jpg
+28|LooLoo Kids|26900000|Subscriptions|http://localhost:8080/images/youtuber/lolo.jpg
+29|EminemMusic|63600000|Subscriptions|http://localhost:8080/images/youtuber/enimem.jpg
+30|김프로KIMPRO|7710000|Subscriptions|http://localhost:8080/images/youtuber/kp.jpg
+31|Billie Eilish|54800000|Subscriptions|http://localhost:8080/images/youtuber/be.jpg
+32|Little Angel|12600000|Subscriptions|http://localhost:8080/images/youtuber/la.jpg
+33|Wave Music|33200000|Subscriptions|http://localhost:8080/images/youtuber/wave.jpg
+34|Marshmello|57600000|Subscriptions|http://localhost:8080/images/youtuber/marsh.jpg
+35|Toys and Colors|20400000|Subscriptions|http://localhost:8080/images/youtuber/tc.jpg
+36|Sony Music India|36600000|Subscriptions|https://storage.googleapis.com/loudest-news-photo/news-photo/17114.Untitled-design-(11).jpg
+37|Ed Sheeran|46000000|Subscriptions|https://wallpapers.com/images/featured/ed-sheeran-y9deb32b7kfiob0h.jpg
+38|Gawr Gura|4500000|Subscriptions|https://images5.alphacoders.com/130/1301288.jpg
+39|IShowSpeed|34200000|Subscriptions|https://i.ytimg.com/vi/wYZux3BMc5k/maxresdefault.jpg
+40|The Weeknd|36800000|Subscriptions|https://i.ytimg.com/vi/fHI8X4OXluQ/maxresdefault.jpg
+41|Shane Dawson|22000000|Subscriptions|https://www.cbc.ca/kidsnews/images/Demonitization1July2.jpg
+42|James Charles|25000000|Subscriptions|https://variety.com/wp-content/uploads/2021/03/James-Charles-Instant-Influencer.jpg?w=1000&h=563&crop=1
+43|Jeffree Star|17000000|Subscriptions|https://socialbook.io/blog/content/images/2020/04/Jeffree-Star-is-one-of-the-top-Beauty-influencers-worldwide-1.jpeg
+44|Logan Paul|23000000|Subscriptions|https://media-cldnry.s-nbcnews.com/image/upload/t_social_share_1024x768_scale,f_auto,q_auto:best/rockcms/2024-01/240104-logan-paul-wm-521p-663ffd.jpg
+45|Jake Paul|20000000|Subscriptions|https://www.usmagazine.com/wp-content/uploads/2022/10/detailed-look-into-youtube-star-jake-pauls-fighting-career-01.jpg?quality=86&strip=all
+46|KSI|24000000|Subscriptions|https://media.gq-magazine.co.uk/photos/610bcbc20b993f08aff7d1aa/4:3/w_1440,h_1080,c_limit/05082021_KSI_HP.jpg
+47|Ninja|23000000|Subscriptions|https://cdn-img.thethao247.vn/upload/nhathuy/2018/09/25/ninja-cuoc-doi-dang-sau-su-noi-tieng-cua-rich-streamer1537845691.jpg
+48|David Dobrik|18000000|Subscriptions|https://i.ytimg.com/vi/lB734hc89x8/maxresdefault.jpg
+49|Emma Chamberlain|11000000|Subscriptions|https://i.ytimg.com/vi/aBsvtyygr0g/maxresdefault.jpg
+50|Liza Koshy|17000000|Subscriptions|https://i.ytimg.com/vi/nRafaCcfrcI/maxresdefault.jpg
