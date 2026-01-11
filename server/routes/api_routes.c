@@ -520,6 +520,8 @@ void serve_image(int client_sock, const char *request, const char *body) {
         else if (strcasecmp(ext, ".png") == 0) content_type = "image/png";
         else if (strcasecmp(ext, ".gif") == 0) content_type = "image/gif";
         else if (strcasecmp(ext, ".webp") == 0) content_type = "image/webp";
+        else if (strcasecmp(ext, ".bmp") == 0) content_type = "image/bmp";
+        else if (strcasecmp(ext, ".avif") == 0) content_type = "image/avif";
     }
 
     // Send headers
