@@ -6,17 +6,25 @@
 #define MAX_PLAYERS 3
 #define MAX_ROOMS 10
 #define MAX_POWERUPS 4
+// Number of questions per game
+#define NUM_QUESTIONS 20
 #include <time.h>
 
 typedef struct {
     int id;
     char name1[50];
     char name2[50];
+    char name3[50];
+    char name4[50];
     long long int value1;
     long long int value2;
+    long long int value3;
+    long long int value4;
     char unit[50];
     char pic1[200];
     char pic2[200];
+    char pic3[200];
+    char pic4[200];
     int answer;
 } Question;
 

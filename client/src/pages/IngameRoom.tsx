@@ -16,8 +16,12 @@ export const IngameRoom = () => {
   const [isShown, setIsShown] = useState(false);
   const [name1, setName1] = useState("");
   const [name2, setName2] = useState("");
+  const [name3, setName3] = useState("");
+  const [name4, setName4] = useState("");
   const [pic1, setPic1] = useState("");
   const [pic2, setPic2] = useState("");
+  const [pic3, setPic3] = useState("");
+  const [pic4, setPic4] = useState("");
   const [unit, setUnit] = useState("");
   const [score, setScore] = useState(0);
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
@@ -30,8 +34,12 @@ export const IngameRoom = () => {
   const [countdown, setCountdown] = useState(200); // 200 for 20 seconds with 0.1s interval
   const [animatedNumber1, setAnimatedNumber1] = useState(0);
   const [animatedNumber2, setAnimatedNumber2] = useState(0);
+  const [animatedNumber3, setAnimatedNumber3] = useState(0);
+  const [animatedNumber4, setAnimatedNumber4] = useState(0);
   const [value1, setValue1] = useState(0);
   const [value2, setValue2] = useState(0);
+  const [value3, setValue3] = useState(0);
+  const [value4, setValue4] = useState(0);
   
 
   // State to track selected power-up
@@ -67,10 +75,35 @@ export const IngameRoom = () => {
         }
       };
 
+      const animate3 = (currentTime: number) => {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
+        const currentNumber = Math.floor(progress * value3);
+        setAnimatedNumber3(currentNumber);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate3);
+        }
+      };
+
+      const animate4 = (currentTime: number) => {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
+        const currentNumber = Math.floor(progress * value4);
+        setAnimatedNumber4(currentNumber);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate4);
+        }
+      };
+
       requestAnimationFrame(animate1);
       requestAnimationFrame(animate2);
+      requestAnimationFrame(animate3);
+      requestAnimationFrame(animate4);
     }
-  }, [isShown, value1, value2]);
+  }, [isShown, value1, value2, value3, value4]);
+  
 
   useEffect(() => {
     if (countdown <= 0) {
@@ -89,10 +122,19 @@ export const IngameRoom = () => {
       });
       setName1(response.data.name1);
       setName2(response.data.name2);
+      setName3(response.data.name3 || "");
+      setName4(response.data.name4 || "");
       setPic1(response.data.pic1);
       setPic2(response.data.pic2);
+      setPic3(response.data.pic3 || "");
+      setPic4(response.data.pic4 || "");
       setUnit(response.data.unit);
       setUsedPowerup(response.data.used_powerup); // Update used power-ups state
+      setValue1(response.data.value1 || 0);
+      setValue2(response.data.value2 || 0);
+      setValue3(response.data.value3 || 0);
+      setValue4(response.data.value4 || 0);
+
       const client = response.data.clients.find((client: { username: string | null; }) => client.username === username);
       const score = client ? client.score : 0;
       setScore(score)
@@ -134,6 +176,8 @@ export const IngameRoom = () => {
           setStreak(data.streak);
           setValue1(data.value1);
           setValue2(data.value2);
+          setValue3(data.value3 || 0);
+          setValue4(data.value4 || 0);
         }
       } else if (data.action === "finish" && data.room_name === id) {
         console.log("Navigating to /result/1 due to Finish event");
@@ -192,8 +236,10 @@ export const IngameRoom = () => {
 
         setScore((pv) => pv + response.data.total_score);
         setStreak(response.data.streak);
-        setValue1(response.data.value1);
-        setValue2(response.data.value2);
+  setValue1(response.data.value1);
+  setValue2(response.data.value2);
+  setValue3(response.data.value3 || 0);
+  setValue4(response.data.value4 || 0);
         setCountdown(response.data.remaining_time * 10); // Update countdown with remaining time
         setSelectedPowerUp(0)
         setUsedPowerup((prevUsedPowerup) => {
@@ -213,7 +259,7 @@ export const IngameRoom = () => {
   const offset = circumference - (countdown / 200) * circumference;
 
   return (
-    <div className="h-dvh grid grid-cols-2 relative">
+    <div className="h-dvh grid grid-cols-2 grid-rows-2 gap-0 relative">
       <div className={cn("brightness-50 hover:brightness-[.4] transition duration-300 cursor-pointer",
         {"cursor-default select-none hover:brightness-50": isShown}
       )}>
@@ -224,9 +270,19 @@ export const IngameRoom = () => {
       )}>
         <img onClick={() => !isShown && countdown > 0 && handleChoice(2)} className="object-cover size-full" src={pic2}alt="" />
       </div>
+      <div className={cn("brightness-50 hover:brightness-[.4] transition duration-300 cursor-pointer",
+        {"cursor-default select-none hover:brightness-50": isShown}
+      )}>
+        <img onClick={() => !isShown && countdown > 0 && handleChoice(3)} className="object-cover size-full" src={pic3} alt="" />
+      </div>
+      <div className={cn("brightness-50 hover:brightness-[.4] transition duration-300 cursor-pointer",
+        {"cursor-default select-none hover:brightness-50": isShown}
+      )}>
+        <img onClick={() => !isShown && countdown > 0 && handleChoice(4)} className="object-cover size-full" src={pic4} alt="" />
+      </div>
       <div className="fixed top-16 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4">
         <div className="text-4xl bg-white/90 text-black rounded-xl px-4 py-1 font-bold flex items-center justify-center">
-          <span>Which of two is higher in {unit} ?</span>
+          <span>Which of four is highest in {unit} ?</span>
         </div>
       </div>
       <div className="fixed bottom-4 left-28 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4">
@@ -264,36 +320,17 @@ export const IngameRoom = () => {
           <span>Score: {score}</span>
         </div>
       </div>
-      <div className="fixed top-1/2 left-1/4 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-20 text-center">
-        <div className="text-4xl font-bold text-white">
-          "{name1}"
-        </div>
-        <div className={cn("flex flex-col gap-4",
-          {"hidden":!isShown}
-        )}>
-          <div className="text-5xl font-bold text-yellow-200">
-            {animatedNumber1.toLocaleString()}
-          </div>
-          <div className="text-xl font-bold text-white">
-            {unit}
-          </div>
-        </div>
-      </div>
-      <div className="fixed top-1/2 left-3/4 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-20 text-center">
-        <div className="text-4xl font-bold text-white">
-            "{name2}"
-        </div>
-        <div className={cn("flex flex-col gap-4",
-          {"hidden":!isShown}
-        )}>
-          <div className="text-5xl font-bold text-yellow-200">
-            {animatedNumber2.toLocaleString()}
-          </div>
-          <div className="text-xl font-bold text-white">
-            {unit}
-          </div>
-        </div>
-      </div>
+      {/* Overlays for four options */}
+  <div className="absolute top-4 left-4 text-white text-2xl font-bold">{name1}</div>
+  <div className="absolute top-4 right-4 text-white text-2xl font-bold">{name2}</div>
+  <div className="absolute bottom-24 left-4 text-white text-2xl font-bold">{name3}</div>
+  <div className="absolute bottom-24 right-4 text-white text-2xl font-bold">{name4}</div>
+
+      {/* Animated numbers over each quadrant (centered) */}
+  <div className={cn("absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-yellow-200 text-4xl font-bold", {"hidden": !isShown})}>{animatedNumber1.toLocaleString()}</div>
+  <div className={cn("absolute top-1/4 right-1/4 transform translate-x-1/2 -translate-y-1/2 text-yellow-200 text-4xl font-bold", {"hidden": !isShown})}>{animatedNumber2.toLocaleString()}</div>
+  <div className={cn("absolute bottom-1/4 left-1/4 transform -translate-x-1/2 translate-y-1/2 text-yellow-200 text-4xl font-bold", {"hidden": !isShown})}>{animatedNumber3.toLocaleString()}</div>
+  <div className={cn("absolute bottom-1/4 right-1/4 transform translate-x-1/2 translate-y-1/2 text-yellow-200 text-4xl font-bold", {"hidden": !isShown})}>{animatedNumber4.toLocaleString()}</div>
       {/* Add the container for the three circle divs */}
       <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex gap-6">
         <div

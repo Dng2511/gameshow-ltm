@@ -7,7 +7,7 @@
 #include "../core/sse.h"
 
 #define TOPIC "database/country.txt"
-#define NUM_QUESTIONS 5
+#define NUM_QUESTIONS 20
 
 GameRoom game_rooms[MAX_ROOMS];
 int num_rooms = 0;
@@ -62,58 +62,70 @@ void create_questions(GameRoom *room, const char *topic) {
 
     shuffle(indices, MAX_LINES);
 
-    // Pick the first NUM_QUESTIONS + 1 distinct entries
-    int selected_indices[NUM_QUESTIONS + 1];
-    for (int i = 0; i < NUM_QUESTIONS + 1; i++) {
+    // Pick the first NUM_QUESTIONS * 4 distinct entries for 4 options each
+    int needed = NUM_QUESTIONS * 4;
+    if (needed > MAX_LINES) needed = MAX_LINES;
+    int selected_indices[needed];
+    for (int i = 0; i < needed; i++) {
         selected_indices[i] = indices[i];
     }
 
-    // Create NUM_QUESTIONS questions from the selected entries
+    // Create NUM_QUESTIONS questions from the selected entries (4 per question)
     for (int i = 0; i < NUM_QUESTIONS; i++) {
-        int idx1 = selected_indices[i];
-        int idx2 = selected_indices[(i + 1) % (NUM_QUESTIONS + 1)];
+        int base = i * 4;
+        int idx1 = selected_indices[base + 0];
+        int idx2 = selected_indices[base + 1];
+        int idx3 = selected_indices[base + 2];
+        int idx4 = selected_indices[base + 3];
 
-        if (i % 2 == 1) {
-            // Swap the order for odd indices
-            sscanf(data[idx2], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]", 
-                &room->questions[i].id, 
-                room->questions[i].name1, 
-                &room->questions[i].value1, 
-                room->questions[i].unit, 
-                room->questions[i].pic1);
+        // Parse four lines into four options
+        sscanf(data[idx1], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
+            &room->questions[i].id,
+            room->questions[i].name1,
+            &room->questions[i].value1,
+            room->questions[i].unit,
+            room->questions[i].pic1);
 
-            sscanf(data[idx1], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]", 
-                &room->questions[i].id, 
-                room->questions[i].name2, 
-                &room->questions[i].value2, 
-                room->questions[i].unit, 
-                room->questions[i].pic2);
-        } else {
-            // Default order for even indices
-            sscanf(data[idx1], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]", 
-                &room->questions[i].id, 
-                room->questions[i].name1, 
-                &room->questions[i].value1, 
-                room->questions[i].unit, 
-                room->questions[i].pic1);
+        sscanf(data[idx2], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
+            &room->questions[i].id,
+            room->questions[i].name2,
+            &room->questions[i].value2,
+            room->questions[i].unit,
+            room->questions[i].pic2);
 
-            sscanf(data[idx2], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]", 
-                &room->questions[i].id, 
-                room->questions[i].name2, 
-                &room->questions[i].value2, 
-                room->questions[i].unit, 
-                room->questions[i].pic2);
-        }
+        sscanf(data[idx3], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
+            &room->questions[i].id,
+            room->questions[i].name3,
+            &room->questions[i].value3,
+            room->questions[i].unit,
+            room->questions[i].pic3);
 
-        printf("Raw line 1: %s\n", data[idx1]);
-        printf("Raw line 2: %s\n", data[idx2]);
-        printf("Parsed 1: %d | %s | %lld | %s | %s\n", 
-        room->questions[i].id, room->questions[i].name1, room->questions[i].value1, room->questions[i].unit, room->questions[i].pic1);
-        printf("Parsed 2: %d | %s | %lld | %s | %s\n", 
-        room->questions[i].id, room->questions[i].name2, room->questions[i].value2, room->questions[i].unit, room->questions[i].pic2);
+        sscanf(data[idx4], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
+            &room->questions[i].id,
+            room->questions[i].name4,
+            &room->questions[i].value4,
+            room->questions[i].unit,
+            room->questions[i].pic4);
 
-        room->questions[i].answer = (room->questions[i].value1 >= room->questions[i].value2) ? 1 : 2;
-        printf("%d\n", room->questions[i].answer);
+        // Debug prints
+        printf("Parsed options for question %d:\n", i);
+        printf("  1: %d | %s | %lld | %s | %s\n",
+            room->questions[i].id, room->questions[i].name1, room->questions[i].value1, room->questions[i].unit, room->questions[i].pic1);
+        printf("  2: %d | %s | %lld | %s | %s\n",
+            room->questions[i].id, room->questions[i].name2, room->questions[i].value2, room->questions[i].unit, room->questions[i].pic2);
+        printf("  3: %d | %s | %lld | %s | %s\n",
+            room->questions[i].id, room->questions[i].name3, room->questions[i].value3, room->questions[i].unit, room->questions[i].pic3);
+        printf("  4: %d | %s | %lld | %s | %s\n",
+            room->questions[i].id, room->questions[i].name4, room->questions[i].value4, room->questions[i].unit, room->questions[i].pic4);
+
+        // Determine which option is the correct one (largest value)
+        long long int maxv = room->questions[i].value1;
+        int ans = 1;
+        if (room->questions[i].value2 > maxv) { maxv = room->questions[i].value2; ans = 2; }
+        if (room->questions[i].value3 > maxv) { maxv = room->questions[i].value3; ans = 3; }
+        if (room->questions[i].value4 > maxv) { maxv = room->questions[i].value4; ans = 4; }
+        room->questions[i].answer = ans;
+        printf("answer: %d\n", room->questions[i].answer);
     }
 
     // Initialize client progress
@@ -234,6 +246,8 @@ void check_timeout(GameRoom *room) {
             json_object_object_add(score_json, "score", json_object_new_int(room->client_progress[i].score));
             json_object_object_add(score_json, "value1", json_object_new_int(room->questions[room->current_question_index].value1));
             json_object_object_add(score_json, "value2", json_object_new_int(room->questions[room->current_question_index].value2));
+            json_object_object_add(score_json, "value3", json_object_new_int(room->questions[room->current_question_index].value3));
+            json_object_object_add(score_json, "value4", json_object_new_int(room->questions[room->current_question_index].value4));
             json_object_object_add(score_json, "streak", json_object_new_int(room->client_progress[i].streak));
             broadcast_json_object(score_json, -1);
             json_object_put(score_json);

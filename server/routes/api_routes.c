@@ -125,8 +125,12 @@ void get_game_data(int client_sock, const char *request, const char *body) {
     json_object_object_add(json_response, "id", json_object_new_int(room->questions[question_index].id));
     json_object_object_add(json_response, "name1", json_object_new_string(room->questions[question_index].name1));
     json_object_object_add(json_response, "name2", json_object_new_string(room->questions[question_index].name2));
+    json_object_object_add(json_response, "name3", json_object_new_string(room->questions[question_index].name3));
+    json_object_object_add(json_response, "name4", json_object_new_string(room->questions[question_index].name4));
     json_object_object_add(json_response, "pic1", json_object_new_string(room->questions[question_index].pic1));
     json_object_object_add(json_response, "pic2", json_object_new_string(room->questions[question_index].pic2));
+    json_object_object_add(json_response, "pic3", json_object_new_string(room->questions[question_index].pic3));
+    json_object_object_add(json_response, "pic4", json_object_new_string(room->questions[question_index].pic4));
     json_object_object_add(json_response, "unit", json_object_new_string(room->questions[question_index].unit));
     json_object_object_add(json_response, "timestamp", json_object_new_int(room->question_start_time)); // Add timestamp
 
@@ -144,6 +148,11 @@ void get_game_data(int client_sock, const char *request, const char *body) {
     for (int i = 1; i < MAX_POWERUPS; i++) {
         json_object_array_add(used_powerup_array, json_object_new_int(room->client_progress[client_index].used_powerup[i]));
     }
+    // Add option values
+    json_object_object_add(json_response, "value1", json_object_new_int(room->questions[question_index].value1));
+    json_object_object_add(json_response, "value2", json_object_new_int(room->questions[question_index].value2));
+    json_object_object_add(json_response, "value3", json_object_new_int(room->questions[question_index].value3));
+    json_object_object_add(json_response, "value4", json_object_new_int(room->questions[question_index].value4));
     json_object_object_add(json_response, "used_powerup", used_powerup_array); // Add used_powerup array
 
     sendResponse(client_sock, json_object_to_json_string(json_response));
@@ -204,6 +213,21 @@ void handle_choice(int client_sock, const char *request, const char *body) {
     }
 
     int question_index = room->client_progress[client_index].current_question;
+
+    // Validate question index
+    if (question_index < 0 || question_index >= NUM_QUESTIONS) {
+        sendError(client_sock, "Invalid question index", 500);
+        json_object_put(json_request);
+        return;
+    }
+
+    // Validate choice (must be 1..4)
+    if (choice < 1 || choice > 4) {
+        sendError(client_sock, "Invalid choice", 400);
+        json_object_put(json_request);
+        return;
+    }
+
     int base_score = (choice == room->questions[question_index].answer) ? 1000 : 0;
     int bonus = 0;
     const char *powerup_msg = "";
@@ -239,6 +263,9 @@ void handle_choice(int client_sock, const char *request, const char *body) {
     struct json_object *broadcast_json = json_object_new_object();
     json_object_object_add(broadcast_json, "action", json_object_new_string("an user answered"));
     json_object_object_add(broadcast_json, "room_name", json_object_new_string(room_name));
+    json_object_object_add(broadcast_json, "username", json_object_new_string(username));
+    json_object_object_add(broadcast_json, "choice", json_object_new_int(choice));
+    json_object_object_add(broadcast_json, "correct", json_object_new_boolean(base_score == 1000));
 
     // Broadcast the JSON object
     broadcast_json_object(broadcast_json, client_sock);
@@ -272,9 +299,13 @@ void handle_choice(int client_sock, const char *request, const char *body) {
     json_object_object_add(json_response, "total_score", json_object_new_int(total_score));
     json_object_object_add(json_response, "value1", json_object_new_int(room->questions[question_index].value1));
     json_object_object_add(json_response, "value2", json_object_new_int(room->questions[question_index].value2));
+    json_object_object_add(json_response, "value3", json_object_new_int(room->questions[question_index].value3));
+    json_object_object_add(json_response, "value4", json_object_new_int(room->questions[question_index].value4));
     json_object_object_add(json_response, "remaining_time", json_object_new_int(remaining_time));
     json_object_object_add(json_response, "streak", json_object_new_int(room->client_progress[client_index].streak));
     json_object_object_add(json_response, "powerup_msg", json_object_new_string(powerup_msg)); // Add powerup_msg to response
+    json_object_object_add(json_response, "correct", json_object_new_boolean(base_score == 1000));
+    json_object_object_add(json_response, "correct_answer", json_object_new_int(room->questions[question_index].answer));
 
     sendResponse(client_sock, json_object_to_json_string(json_response));
 
@@ -406,14 +437,19 @@ void choice(int client_sock, const char *request, const char *body) {
     struct json_object *json_request = json_tokener_parse(body);
     struct json_object *choice_obj;
 
-    const char *choice_str = "No choice received";
+    int choice_val = -1;
     if (json_request && json_object_object_get_ex(json_request, "choice", &choice_obj)) {
-        choice_str = json_object_get_string(choice_obj);
+        if (json_object_get_type(choice_obj) == json_type_int) {
+            choice_val = json_object_get_int(choice_obj);
+        } else if (json_object_get_type(choice_obj) == json_type_string) {
+            const char *s = json_object_get_string(choice_obj);
+            choice_val = atoi(s);
+        }
     }
 
     struct json_object *json_response = json_object_new_object();
     json_object_object_add(json_response, "status", json_object_new_string("Choice received"));
-    json_object_object_add(json_response, "choice", json_object_new_string(choice_str));
+    json_object_object_add(json_response, "choice", json_object_new_int(choice_val));
 
     const char *json_str = json_object_to_json_string(json_response);
     char response[BUFF_SIZE];
