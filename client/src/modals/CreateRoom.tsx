@@ -46,7 +46,7 @@ const CreateRoom: React.FC<Props> = ({ isOpen, setIsOpen }) => {
     topic: z.enum(["anime", "country", "youtuber"], {
       errorMap: () => ({ message: "Topic must be one of anime, country, or youtuber" }),
     }),
-    num_questions: z.enum(["5","10","20"], { errorMap: () => ({ message: "Num questions must be 5,10 or 20" })}),
+    num_questions: z.enum(["5","10"], { errorMap: () => ({ message: "Num questions must be 5,10" })}),
     username: z.string().nullable()
   });
 
@@ -181,7 +181,6 @@ const CreateRoom: React.FC<Props> = ({ isOpen, setIsOpen }) => {
                             <SelectContent className="font-semibold">
                               <SelectItem value="5">5</SelectItem>
                               <SelectItem value="10">10</SelectItem>
-                              <SelectItem value="20">20</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
