@@ -45,7 +45,21 @@ void initialize_game(int client_sock, const char *request, const char *body) {
     //     return;
     // }
 
-    GameRoom *game_room = create_game_room(room_name, room->topic);
+    // Create game room with requested number of questions (if provided in request)
+    // Try to read num_questions from JSON if present
+    struct json_object *num_questions_obj;
+    int num_questions = 0;
+    if (json_request && json_object_object_get_ex(json_request, "num_questions", &num_questions_obj)) {
+        num_questions = json_object_get_int(num_questions_obj);
+    }
+
+    // Create game room and pass requested question count. If caller didn't provide num_questions,
+    // fall back to the waiting room's stored num_questions (set at creation time).
+    if (num_questions <= 0) {
+        if (room->num_questions > 0) num_questions = room->num_questions;
+        else num_questions = NUM_QUESTIONS;
+    }
+    GameRoom *game_room = create_game_room(room_name, room->topic, num_questions);
     if (!game_room) {
         sendError(client_sock, "Server is full", 500);
         return;
@@ -116,7 +130,7 @@ void get_game_data(int client_sock, const char *request, const char *body) {
 
     int question_index = room->client_progress[client_index].current_question;
 
-    if (question_index < 0 || question_index >= 10) {
+    if (question_index < 0 || question_index >= room->num_questions) {
         sendError(client_sock, "Invalid question index", 500);
         return;
     }
@@ -215,7 +229,7 @@ void handle_choice(int client_sock, const char *request, const char *body) {
     int question_index = room->client_progress[client_index].current_question;
 
     // Validate question index
-    if (question_index < 0 || question_index >= NUM_QUESTIONS) {
+    if (question_index < 0 || question_index >= room->num_questions) {
         sendError(client_sock, "Invalid question index", 500);
         json_object_put(json_request);
         return;

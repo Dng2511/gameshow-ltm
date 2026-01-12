@@ -122,12 +122,14 @@ export const WaitingRoom = () => {
     try {
       console.log({
         room_name: id,
-        num_players: roomInfo.users.length
+        num_players: roomInfo.users.length,
+        num_questions: roomInfo.num_questions || (roomInfo.capacity || 20)
       })
       const res = await axios.post(`${BASE_URL}/game/init`, {
         room_name: id,
         username,
-        num_players: roomInfo.users.length
+        num_players: roomInfo.users.length,
+        num_questions: roomInfo.num_questions || (roomInfo.capacity || 20)
       } ,{
         headers: {
           'Content-Type': 'application/json',

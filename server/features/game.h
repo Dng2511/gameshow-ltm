@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define MAX_LINES 50
+#define MAX_LINES 100
 #define MAX_LINE_LENGTH 1000
 #define MAX_PLAYERS 3
 #define MAX_ROOMS 10
@@ -39,7 +39,8 @@ typedef struct {
 
 typedef struct {
     char room_name[50];
-    Question questions[10];
+    Question questions[NUM_QUESTIONS];
+    int num_questions; // actual number of questions chosen for this room (<= NUM_QUESTIONS)
     int current_question_index;
     ClientProgress client_progress[MAX_PLAYERS];
     int num_players;
@@ -52,7 +53,8 @@ extern GameRoom game_rooms[MAX_ROOMS];
 extern int num_rooms;
 
 void create_questions(GameRoom *room, const char *topic);
-GameRoom* create_game_room(const char *room_name, const char *topic);
+// num_questions: how many questions to generate for this room (max NUM_QUESTIONS)
+GameRoom* create_game_room(const char *room_name, const char *topic, int num_questions);
 GameRoom* find_room(const char *room_name);
 void delete_game_room(const char *room_name);
 void check_timeout(GameRoom *room);

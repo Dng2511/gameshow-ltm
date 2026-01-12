@@ -154,6 +154,8 @@ void add_room(int client_sock, const char *request, const char *body) {
 
     int capacity = 0;
 
+    struct json_object *num_questions_obj;
+    int num_questions = 0;
     if (json_request && json_object_object_get_ex(json_request, "room_name", &room_name_obj) && 
         json_object_object_get_ex(json_request, "username", &username_obj) &&
         json_object_object_get_ex(json_request, "capacity", &capacity_obj) && 
@@ -162,6 +164,13 @@ void add_room(int client_sock, const char *request, const char *body) {
         username = json_object_get_string(username_obj);
         capacity = json_object_get_int(capacity_obj);
         topic = json_object_get_string(topic_obj);
+        if (json_object_object_get_ex(json_request, "num_questions", &num_questions_obj)) {
+            num_questions = json_object_get_int(num_questions_obj);
+            if (num_questions < 1) num_questions = 1;
+            if (num_questions > 20) num_questions = 20;
+        } else {
+            num_questions = 20;
+        }
         // username = json_object_get_string(username_obj);
         if (capacity < 2) {
             capacity = 2;
@@ -180,6 +189,8 @@ void add_room(int client_sock, const char *request, const char *body) {
 
     struct json_object *json_response = json_object_new_object();
     if (room_name && create_room(room_name, capacity, topic, username)) {
+        Room *r = get_room_by_name(room_name);
+        if (r) r->num_questions = num_questions;
         json_object_object_add(json_response, "status", json_object_new_string("success"));
         json_object_object_add(json_response, "message", json_object_new_string("Room created successfully"));
         sendResponse(client_sock, json_object_to_json_string(json_response));

@@ -46,6 +46,7 @@ const CreateRoom: React.FC<Props> = ({ isOpen, setIsOpen }) => {
     topic: z.enum(["anime", "country", "youtuber"], {
       errorMap: () => ({ message: "Topic must be one of anime, country, or youtuber" }),
     }),
+    num_questions: z.enum(["5","10","20"], { errorMap: () => ({ message: "Num questions must be 5,10 or 20" })}),
     username: z.string().nullable()
   });
 
@@ -55,6 +56,7 @@ const CreateRoom: React.FC<Props> = ({ isOpen, setIsOpen }) => {
       room_name: "",
       capacity: "5",
       topic: "anime",
+      num_questions: "5",
       username: username
     },
   });

@@ -7,25 +7,26 @@
 #include "../core/sse.h"
 
 #define TOPIC "database/country.txt"
-#define NUM_QUESTIONS 20
 
 GameRoom game_rooms[MAX_ROOMS];
 int num_rooms = 0;
 
-void load_data(const char *filename, char data[MAX_LINES][MAX_LINE_LENGTH]) {
+void load_data(const char *filename, char data[MAX_LINES][MAX_LINE_LENGTH], int *out_count) {
     FILE *file = fopen(filename, "r");
     if (!file) {
         perror("Failed to open file");
-        exit(EXIT_FAILURE);
+        *out_count = 0;
+        return;
     }
 
     int i = 0;
-    while (fgets(data[i], MAX_LINE_LENGTH, file) && i < MAX_LINES) {
+    while (i < MAX_LINES && fgets(data[i], MAX_LINE_LENGTH, file)) {
         data[i][strcspn(data[i], "\n")] = '\0'; // Remove newline character
         i++;
     }
 
     fclose(file);
+    *out_count = i;
 }
 
 // Đọc toàn bộ dòng từ file data vào mảng `data` (mỗi dòng 1 entry), xử lý EOF.
@@ -52,60 +53,97 @@ void create_questions(GameRoom *room, const char *topic) {
     snprintf(file_path, sizeof(file_path), "database/%s.txt", topic);
 
     // Load data from the constructed file path
-    load_data(file_path, data);
+    int data_count = 0;
+    load_data(file_path, data, &data_count);
+    if (data_count == 0) {
+        fprintf(stderr, "No data loaded from %s\n", file_path);
+        return;
+    }
 
     srand(time(NULL));
-    int indices[MAX_LINES];
-    for (int i = 0; i < MAX_LINES; i++) {
+    int indices[data_count];
+    for (int i = 0; i < data_count; i++) {
         indices[i] = i;
     }
 
-    shuffle(indices, MAX_LINES);
+    shuffle(indices, data_count);
 
-    // Pick the first NUM_QUESTIONS * 4 distinct entries for 4 options each
-    int needed = NUM_QUESTIONS * 4;
-    if (needed > MAX_LINES) needed = MAX_LINES;
+    // Limit requested questions so we have enough data (4 options per question)
+    int max_possible_questions = data_count / 4;
+    if (room->num_questions > max_possible_questions) room->num_questions = max_possible_questions;
+    if (room->num_questions <= 0) room->num_questions = 1;
+
+    int needed = room->num_questions * 4;
     int selected_indices[needed];
     for (int i = 0; i < needed; i++) {
         selected_indices[i] = indices[i];
     }
 
-    // Create NUM_QUESTIONS questions from the selected entries (4 per question)
-    for (int i = 0; i < NUM_QUESTIONS; i++) {
+    // Create room->num_questions questions from the selected entries (4 per question)
+    for (int i = 0; i < room->num_questions; i++) {
         int base = i * 4;
         int idx1 = selected_indices[base + 0];
         int idx2 = selected_indices[base + 1];
         int idx3 = selected_indices[base + 2];
         int idx4 = selected_indices[base + 3];
 
-        // Parse four lines into four options
-        sscanf(data[idx1], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
-            &room->questions[i].id,
-            room->questions[i].name1,
-            &room->questions[i].value1,
-            room->questions[i].unit,
-            room->questions[i].pic1);
-
-        sscanf(data[idx2], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
-            &room->questions[i].id,
-            room->questions[i].name2,
-            &room->questions[i].value2,
-            room->questions[i].unit,
-            room->questions[i].pic2);
-
-        sscanf(data[idx3], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
-            &room->questions[i].id,
-            room->questions[i].name3,
-            &room->questions[i].value3,
-            room->questions[i].unit,
-            room->questions[i].pic3);
-
-        sscanf(data[idx4], "%d|%49[^|]|%lld|%49[^|]|%199[^\n]",
-            &room->questions[i].id,
-            room->questions[i].name4,
-            &room->questions[i].value4,
-            room->questions[i].unit,
-            room->questions[i].pic4);
+        // Parse four lines into four options by splitting on '|'
+        char *parts[5];
+        char buf[MAX_LINE_LENGTH];
+        // helper lambda-like block
+        for (int opt = 0; opt < 4; opt++) {
+            int idx = (opt == 0) ? idx1 : (opt == 1) ? idx2 : (opt == 2) ? idx3 : idx4;
+            strncpy(buf, data[idx], sizeof(buf));
+            buf[sizeof(buf)-1] = '\0';
+            // Initialize parts
+            for (int p = 0; p < 5; p++) parts[p] = NULL;
+            // split
+            char *tok = strtok(buf, "|");
+            int p = 0;
+            while (tok && p < 5) {
+                parts[p++] = tok;
+                tok = strtok(NULL, "|");
+            }
+            // fill fields safely
+            int target = i; // to use inside switch
+            if (parts[0]) {
+                int parsed_id = atoi(parts[0]);
+                if (opt == 0) room->questions[i].id = parsed_id;
+                else room->questions[i].id = room->questions[i].id; // keep existing id
+            }
+            const char *name = parts[1] ? parts[1] : "";
+            long long val = parts[2] ? atoll(parts[2]) : 0;
+            const char *unit = parts[3] ? parts[3] : "";
+            const char *pic = parts[4] ? parts[4] : "";
+            if (opt == 0) {
+                strncpy(room->questions[i].name1, name, sizeof(room->questions[i].name1));
+                room->questions[i].value1 = val;
+                strncpy(room->questions[i].unit, unit, sizeof(room->questions[i].unit));
+                strncpy(room->questions[i].pic1, pic, sizeof(room->questions[i].pic1));
+            } else if (opt == 1) {
+                strncpy(room->questions[i].name2, name, sizeof(room->questions[i].name2));
+                room->questions[i].value2 = val;
+                strncpy(room->questions[i].pic2, pic, sizeof(room->questions[i].pic2));
+            } else if (opt == 2) {
+                strncpy(room->questions[i].name3, name, sizeof(room->questions[i].name3));
+                room->questions[i].value3 = val;
+                strncpy(room->questions[i].pic3, pic, sizeof(room->questions[i].pic3));
+            } else if (opt == 3) {
+                strncpy(room->questions[i].name4, name, sizeof(room->questions[i].name4));
+                room->questions[i].value4 = val;
+                strncpy(room->questions[i].pic4, pic, sizeof(room->questions[i].pic4));
+            }
+            // ensure null termination
+            room->questions[i].name1[sizeof(room->questions[i].name1)-1] = '\0';
+            room->questions[i].name2[sizeof(room->questions[i].name2)-1] = '\0';
+            room->questions[i].name3[sizeof(room->questions[i].name3)-1] = '\0';
+            room->questions[i].name4[sizeof(room->questions[i].name4)-1] = '\0';
+            room->questions[i].unit[sizeof(room->questions[i].unit)-1] = '\0';
+            room->questions[i].pic1[sizeof(room->questions[i].pic1)-1] = '\0';
+            room->questions[i].pic2[sizeof(room->questions[i].pic2)-1] = '\0';
+            room->questions[i].pic3[sizeof(room->questions[i].pic3)-1] = '\0';
+            room->questions[i].pic4[sizeof(room->questions[i].pic4)-1] = '\0';
+        }
 
         // Debug prints
         printf("Parsed options for question %d:\n", i);
@@ -148,10 +186,14 @@ void create_questions(GameRoom *room, const char *topic) {
 // - load file topic, shuffle, chọn NUM_QUESTIONS, phân tích chuỗi vào cấu trúc question,
 // - khởi tạo trạng thái tiến độ của client trong phòng.
 
-GameRoom* create_game_room(const char *room_name, const char *topic) {
+GameRoom* create_game_room(const char *room_name, const char *topic, int num_questions) {
     if (num_rooms < MAX_ROOMS) {
         GameRoom *new_room = &game_rooms[num_rooms++];
         strncpy(new_room->room_name, room_name, sizeof(new_room->room_name));
+        // clamp num_questions
+        if (num_questions <= 0) num_questions = NUM_QUESTIONS;
+        if (num_questions > NUM_QUESTIONS) num_questions = NUM_QUESTIONS;
+        new_room->num_questions = num_questions;
         create_questions(new_room, topic);
         return new_room;
     }
@@ -208,7 +250,7 @@ void check_timeout(GameRoom *room) {
             room->current_question_index++;
             printf("current index: %d\n",room->current_question_index);
 
-            if (room->current_question_index >= NUM_QUESTIONS) {
+            if (room->current_question_index >= room->num_questions) {
                 // Broadcast "Finish"
                 struct json_object *broadcast_json = json_object_new_object();
                 json_object_object_add(broadcast_json, "action", json_object_new_string("finish"));
@@ -276,7 +318,7 @@ void check_timeout(GameRoom *room) {
         printf("22 sec over\n");
         room->current_question_index++;
         printf("current index: %d\n",room->current_question_index);
-        if (room->current_question_index >= NUM_QUESTIONS) {
+    if (room->current_question_index >= room->num_questions) {
             // Broadcast "Finish"
             struct json_object *broadcast_json = json_object_new_object();
             json_object_object_add(broadcast_json, "action", json_object_new_string("finish"));

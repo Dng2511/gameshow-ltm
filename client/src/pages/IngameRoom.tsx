@@ -124,12 +124,14 @@ export const IngameRoom = () => {
       setName2(response.data.name2);
       setName3(response.data.name3 || "");
       setName4(response.data.name4 || "");
-      setPic1(response.data.pic1);
-      setPic2(response.data.pic2);
-      setPic3(response.data.pic3 || "");
-      setPic4(response.data.pic4 || "");
+  // Ensure pic values are always strings and provide a placeholder when missing
+  const placeholder = '/vite.svg';
+  setPic1(response.data.pic1 || placeholder);
+  setPic2(response.data.pic2 || placeholder);
+  setPic3(response.data.pic3 || placeholder);
+  setPic4(response.data.pic4 || placeholder);
       setUnit(response.data.unit);
-      setUsedPowerup(response.data.used_powerup); // Update used power-ups state
+  setUsedPowerup(response.data.used_powerup || [0, 0, 0]); // Update used power-ups state
       setValue1(response.data.value1 || 0);
       setValue2(response.data.value2 || 0);
       setValue3(response.data.value3 || 0);
@@ -176,8 +178,8 @@ export const IngameRoom = () => {
           setStreak(data.streak);
           setValue1(data.value1);
           setValue2(data.value2);
-          setValue3(data.value3 || 0);
-          setValue4(data.value4 || 0);
+          setValue3(data.value3);
+          setValue4(data.value4);
         }
       } else if (data.action === "finish" && data.room_name === id) {
         console.log("Navigating to /result/1 due to Finish event");
@@ -263,22 +265,22 @@ export const IngameRoom = () => {
       <div className={cn("brightness-50 hover:brightness-[.4] transition duration-300 cursor-pointer",
         {"cursor-default select-none hover:brightness-50": isShown}
       )}>
-        <img onClick={() => !isShown && countdown > 0 && handleChoice(1)} className="object-cover size-full" src={pic1} alt="" />
+        <img onClick={() => !isShown && countdown > 0 && handleChoice(1)} className="object-cover size-full" src={pic1} alt="" onError={(e: any) => (e.currentTarget.src = '/vite.svg')} />
       </div>
       <div className={cn("brightness-50 hover:brightness-[.4] transition duration-300 cursor-pointer",
         {"cursor-default select-none hover:brightness-50": isShown}
       )}>
-        <img onClick={() => !isShown && countdown > 0 && handleChoice(2)} className="object-cover size-full" src={pic2}alt="" />
+        <img onClick={() => !isShown && countdown > 0 && handleChoice(2)} className="object-cover size-full" src={pic2} alt="" onError={(e: any) => (e.currentTarget.src = '/vite.svg')} />
       </div>
       <div className={cn("brightness-50 hover:brightness-[.4] transition duration-300 cursor-pointer",
         {"cursor-default select-none hover:brightness-50": isShown}
       )}>
-        <img onClick={() => !isShown && countdown > 0 && handleChoice(3)} className="object-cover size-full" src={pic3} alt="" />
+        <img onClick={() => !isShown && countdown > 0 && handleChoice(3)} className="object-cover size-full" src={pic3} alt="" onError={(e: any) => (e.currentTarget.src = '/vite.svg')} />
       </div>
       <div className={cn("brightness-50 hover:brightness-[.4] transition duration-300 cursor-pointer",
         {"cursor-default select-none hover:brightness-50": isShown}
       )}>
-        <img onClick={() => !isShown && countdown > 0 && handleChoice(4)} className="object-cover size-full" src={pic4} alt="" />
+        <img onClick={() => !isShown && countdown > 0 && handleChoice(4)} className="object-cover size-full" src={pic4} alt="" onError={(e: any) => (e.currentTarget.src = '/vite.svg')} />
       </div>
       <div className="fixed top-16 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4">
         <div className="text-4xl bg-white/90 text-black rounded-xl px-4 py-1 font-bold flex items-center justify-center">
